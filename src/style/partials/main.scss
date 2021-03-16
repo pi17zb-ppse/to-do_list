@@ -1,0 +1,113 @@
+input,
+button,
+textarea {
+	font-size: inherit;
+	font-family: inherit;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+div,
+input,
+textarea,
+select,
+button,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span {
+	outline: none;
+	font-size: inherit;
+	background: transparent;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+a,
+a:hover {
+	text-decoration: none;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
+
+textarea {
+	resize: none;
+}
+
+a {
+	color: inherit;
+}
+
+
+body {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	color: #323340;
+	background: #ffffff;
+	font-family: $mainFont;
+	font-size: 16px;
+}
+
+.main {
+	flex-grow: 1;
+}
+html,body{
+	height: 100%;
+}
+.container {
+	box-sizing: border-box;
+	width: 981px;
+	max-width: 95%;
+	max-width: calc(100% - 30px * 2);
+	margin: 0 auto;
+}
+
+@media screen and (max-width: 550px) {
+	.container {
+		max-width: calc(100% - 15px * 2);
+	}
+}
+
+#jGrowl {
+	z-index: 999999;
+}
+
+*:focus {
+	outline: none;
+}
+
+.hide {
+	display: none;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+
+	-webkit-locale: auto;
+	white-space: normal;
+	&.compensate-for-scrollbar{
+		overflow: hidden;
+	}
+}
+
+html {
+	-moz-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	-o-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+

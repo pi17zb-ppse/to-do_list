@@ -1,0 +1,28 @@
+mixin breadcrumbs(paddingLeft=false,item1="", item2="", item3="", item4="", item5="")
+	nav.breadcrumbs-wrap
+	ul(class="breadcrumbs" + (paddingLeft==true?"":" breadcrumbs--pl0"))
+		if(item1=="")
+			li.breadcrumbs-item
+				a.breadcrumbs-item-a(href="") Раздел
+
+			li.breadcrumbs-item Раздел
+		else
+			li.breadcrumbs-item
+				a.breadcrumbs-item-a(href="")
+					=item1
+			if(item2!="")
+				li.breadcrumbs-item
+					a.breadcrumbs-item-a(href="")
+						=item2
+			if(item3!="")
+				li.breadcrumbs-item
+					a.breadcrumbs-item-a(href="")
+						=item3
+			if(item4!="")
+				li.breadcrumbs-item
+					a.breadcrumbs-item-a(href="")
+						=item4
+			if(item5!="")
+				li.breadcrumbs-item
+					a.breadcrumbs-item-a(href="")
+						=item5
