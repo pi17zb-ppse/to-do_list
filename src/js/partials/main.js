@@ -3,9 +3,10 @@ $(document).ready(function () {
 	autosize($('.textarea-autosize'));
 
 	$('.js-todo-list-item__chb').on('change', function () {
-		if($(this).is(':checked')){
+		if ($(this).is(':checked')) {
+
+		} else {
 
 		}
-		else{}
 	});
 });
