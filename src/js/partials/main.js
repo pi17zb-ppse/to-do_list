@@ -6,5 +6,6 @@ $(document).ready(function () {
 		if($(this).is(':checked')){
 
 		}
+		else
 	});
 });
