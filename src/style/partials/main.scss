@@ -105,8 +105,10 @@ body {
 	&.compensate-for-scrollbar {
 		overflow: hidden;
 	}
+
 	color: #053B41;
 	background: #e0edec;
+    width: 450px;
 }
 
 html {
@@ -130,27 +132,49 @@ html {
 }
 
 .copyright {
-	padding: 5px;
+    padding: 1px;
+    font-size: 13px;
+	line-height: 1;
 	text-align: center;
 	background: #9ECE9A;
 }
+.simplebar-scrollbar:before {
+	opacity: 1;
+    background: #9ece9a;
+    border-radius: 50px;
+    border: 1px solid #000000;
+    left: 6px;
+    right: 0px;
+}.simplebar-scrollbar.simplebar-visible:before {
+    opacity: .7;
+}
+.todo-list-wrap{
+
+	height: 220vh;
+	overflow: auto;
+	max-height: 90vh;
+	min-height: 300px;
+	overflow-x: hidden;
+}
 
 .todo-list {
+	padding-right: 5px;
 	display: flex;
-	flex-direction: column;
+	flex-direction: column-reverse;
+
 }
 
 .todo-list-item {
+    padding: 3px 3px;
 	transition-duration: .2s;
 	position: relative;
 	z-index: 1;
 	display: flex;
 	align-items: center;
-	padding: 10px 15px;
 	border-bottom: 1px solid #074F57;
 
 	&__chb-wrap {
-		margin-right: 5px;
+		margin-right: 3px;
 		align-self: flex-start;
 		margin-top: 0;
 	}
@@ -209,7 +233,7 @@ html {
 	}
 
 	&__remove {
-		margin-left: 10px;
+		margin-left: 6px;
 		cursor: pointer;
 		width: 20px;
 		min-width: 20px;
@@ -221,24 +245,67 @@ html {
 		background: url(../img/remove.svg) no-repeat center center;
 		background-size: contain;
 		align-self: flex-start;
-margin-top: 2px;
+		margin-top: 2px;
 		transition-duration: .2s;
+		opacity: .5;
 
 		&:hover {
-			opacity: .7;
+			opacity: 1;
 
 			&::before {}
 		}
 	}
 
 	&:nth-child(2n) {
-	//	background: #e0edec;
+		//	background: #e0edec;
 	}
 
 	&--completed {
 		text-decoration: line-through;
 		opacity: .7;
-		order: 999;
+		order: -999999 !important;
+
 		&::after {}
+	}
+}
+
+.todo-add-new {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-top: 1px solid #074F57;
+	border-bottom: 1px solid #074F57;
+	background: #9ece9a;
+    padding: 4px 20px;
+	transition-duration: .9s;
+	cursor: pointer;
+	order: 999999;
+	/*position: sticky;
+	top: 0;*/
+	z-index: 9999;
+
+	span {
+		display: block;
+		font-size: 21px;
+		font-weight: 400;
+		color: #000;
+	}
+
+	&::before {
+		margin-right: 15px;
+		content: '';
+		width: 20px;
+		min-width: 20px;
+		height: 20px;
+		display: block;
+		background: url(../img/remove.svg) no-repeat center center;
+		background-size: contain;
+		transform: rotate(45deg);
+
+		background: url(../img/remove.svg) no-repeat center center;
+	}
+
+	&:hover {
+		opacity: .7;
 	}
 }

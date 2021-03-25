@@ -1,11 +1,12 @@
 @import "partials/reset.css";
 @import "partials/fonts.css";
-@import "partials/jquery.fancybox.min.css";
-@import "partials/slick.css";
+//import "partials/jquery.fancybox.min.css";
+//import "partials/slick.css";
+@import "partials/simplebar.css";
 
 /* my style */
 
-@import "partials/_var"; 
+@import "partials/_var";
 
 @import "partials/mixin";
 @import "partials/components";

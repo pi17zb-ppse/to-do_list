@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta property="og:image" content="images/logo.svg">
+    <meta name="format-detection" content="telephone=no">
+    <link href="css/main.css" rel="stylesheet">
+    <!--title= `${page.title}`-->
+  </head>
+  <body>
+    <header class="site-header">
+      <!--.sh-burger
+      span
+      
+      -->
+      <div class="copyright">to-do_list by dmityboz21©</div>
+    </header>
+    <main class="main">
+      <div class="todo-list" id="todo-list">
+        <div class="todo-list-item todo-list-item--completed">
+          <label class="todo-list-item__chb-wrap">
+            <input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox" checked>
+            <div class="todo-list-item__chb-pseudo js-todo-list-item__chb"></div>
+          </label>
+          <div class="todo-list-item__content">
+            <textarea class="textarea-autosize">Купить воды</textarea>
+          </div>
+          <div class="todo-list-item__remove js-todo-list-item__remove"></div>
+        </div>
+        <div class="todo-list-item">
+          <label class="todo-list-item__chb-wrap">
+            <input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox">
+            <div class="todo-list-item__chb-pseudo js-todo-list-item__chb"></div>
+          </label>
+          <div class="todo-list-item__content">
+            <textarea class="textarea-autosize"></textarea>
+          </div>
+          <div class="todo-list-item__remove js-todo-list-item__remove"></div>
+        </div>
+        <div class="todo-add-new js-todo-add-new"><span>Добавить</span></div>
+      </div>
+    </main>
+    <footer class="site-footer"></footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>
