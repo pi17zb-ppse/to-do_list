@@ -108,7 +108,7 @@ body {
 
 	color: #053B41;
 	background: #e0edec;
-    width: 450px;
+	width: 450px;
 }
 
 html {
@@ -117,6 +117,18 @@ html {
 	-o-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
+}
+
+.clear-all {
+	position: absolute;
+	right: 0;
+	z-index: 50;
+	top: 0;
+	&:hover{
+
+	color: red;
+	cursor: pointer;
+	}
 }
 
 .textarea-autosize {
@@ -132,23 +144,27 @@ html {
 }
 
 .copyright {
-    padding: 1px;
-    font-size: 13px;
+	padding: 1px;
+	font-size: 13px;
 	line-height: 1;
 	text-align: center;
 	background: #9ECE9A;
 }
+
 .simplebar-scrollbar:before {
 	opacity: 1;
-    background: #9ece9a;
-    border-radius: 50px;
-    border: 1px solid #000000;
-    left: 6px;
-    right: 0px;
-}.simplebar-scrollbar.simplebar-visible:before {
-    opacity: .7;
+	background: #9ece9a;
+	border-radius: 50px;
+	border: 1px solid #000000;
+	left: 6px;
+	right: 0px;
 }
-.todo-list-wrap{
+
+.simplebar-scrollbar.simplebar-visible:before {
+	opacity: .7;
+}
+
+.todo-list-wrap {
 
 	height: 220vh;
 	overflow: auto;
@@ -165,7 +181,7 @@ html {
 }
 
 .todo-list-item {
-    padding: 3px 3px;
+	padding: 3px 3px;
 	transition-duration: .2s;
 	position: relative;
 	z-index: 1;
@@ -276,7 +292,7 @@ html {
 	border-top: 1px solid #074F57;
 	border-bottom: 1px solid #074F57;
 	background: #9ece9a;
-    padding: 4px 20px;
+	padding: 4px 20px;
 	transition-duration: .9s;
 	cursor: pointer;
 	order: 999999;

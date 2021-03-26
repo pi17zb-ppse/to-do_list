@@ -5,6 +5,7 @@
 /// libs/slick.min.js
 //= libs/autosize.min.js
 //= libs/simplebar.min.js
+//= libs/jquery.ba-throttle-debounce.min.js
 
 /* my scripts */
 

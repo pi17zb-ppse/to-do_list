@@ -1,152 +1,82 @@
+var todoListSimplebar;
 
-	var todoListSimplebar;
-
-	function initList() {
-		chrome.storage.local.get('firstRun', function (result) {
-			if (result['firstRun'] === undefined) {
-				console.log('firstRun');
+function initList() {
+	chrome.storage.local.get('firstRun', function (result) {
+		//console.log('validate '+(result['firstRun'] !== true));
+		if (result['firstRun'] !== true) {
+			console.log('firstRun');
+			chrome.storage.local.set({
+				'firstRun': true
+			}, function () {
 				chrome.storage.local.set({
-					'firstRun': true
+					'lastItem': -1
 				}, function () {
 					chrome.storage.local.set({
-						'lastItem': -1
+						'itemsIdsArr': []
+						//тут буду хранить булеан(указывающий на наличие элемента под данным id), id это будут числовые версии текстовых id
+						//UPD: передумал, теперь буду хранить просто id элементов
 					}, function () {
-						chrome.storage.local.set({
-							'itemsIdsArr': [] //тут буду хранить булеан(указывающий на наличие элемента под данным id), id это будут числовые версии текстовых id
-						}, function () {
-							addNewItem();
+						addNewItem();
 
-						});
 					});
 				});
-			}
-			else{
-				console.log('notFirstRun');
-			}
-		});
-
-	}
-
-	function addNewItem() {
-
-		chrome.storage.local.get('lastItem', function (result) {
-
-			chrome.storage.local.set({
-				'lastItem': result['lastItem'] + 1
-			}, function () {
-				chrome.storage.local.get('itemsIdsArr', function (result2) {
-					var tempArr = result2['itemsIdsArr'];
-					tempArr[result['lastItem'] + 1] = true;
-
-					chrome.storage.local.set({
-						'itemsIdsArr': tempArr
-					}, function () {});
-				});
 			});
-
-			var newId = ((result['lastItem'] + 1).toString());
-			console.log('created '+newId);
-			chrome.storage.local.set({
-				newId: [false, ''] //данные будем хранить в формате is_checked, content
-			}, function () {});
-
-
-			var str = '<div class="todo-list-item" style="order:'+newId+';" data-id="' + newId + '">\
-			<label class="todo-list-item__chb-wrap">\
-				<input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox">\
-				<div class="todo-list-item__chb-pseudo js-todo-list-item__chb"></div>\
-			</label>\
-			<div class="todo-list-item__content">\
-				<textarea class="textarea-autosize"></textarea>\
-			</div>\
-			<div class="todo-list-item__remove js-todo-list-item__remove"></div>\
-			</div>';
-			$('#todo-list').prepend(str);
-			autosize($('.textarea-autosize'));
-			todoListSimplebar.recalculate();
-
-
-
-		});
-	}
-
-
-
-	function changeItemStatus(id, status) {
-		var idStr = id.toString();
-		chrome.storage.local.get(idStr, function (result) {
-			var arr=result[idStr];
-			arr[0]=status;
-			chrome.storage.local.set({
-				idStr : arr //данные будем хранить в формате is_checked, content
-			}, function () {});
+		} else {
+			console.log('notFirstRun');
 		}
-	}
+	});
+
+}
+
+function reset() {
+	chrome.storage.local.set({
+		'firstRun': false
+	}, function () {
+		initList();
+	});
+}
+
+function status() {
+
+	chrome.storage.local.get(['firstRun', 'lastItem', 'itemsIdsArr', '0', '1','2','3','4','5'], function (result) {
+		console.log((result['firstRun']));
+		console.log((result['lastItem']));
+		console.log((result['itemsIdsArr']));
+		console.log((result['0']));
+		console.log((result['1']));
+		console.log((result['2']));
+		console.log((result['3']));
+		console.log((result['4']));
+		console.log((result['5']));
+	});
+}
 
 
-	function changeItemText(id, text) {
-		var idStr = id.toString();
-		chrome.storage.local.get(idStr, function (result) {
-			var arr=result[idStr];
-			arr[1]=text;
-			chrome.storage.local.set({
-				idStr: arr //данные будем хранить в формате is_checked, content
-			}, function () {});
-		}
-	}
+function addNewItem() {
 
+	chrome.storage.local.get('lastItem', function (result) {
 
-	function removeItem(removeId) {
-		chrome.storage.local.get('lastItem', function (result) {
-			if(removeId===result['lastItem']){
-				chrome.storage.local.set({
-					'lastItem': removeId - 1
-				}, function () {});
-			}
-
+		var newId = ((result['lastItem'] + 1).toString());
+		chrome.storage.local.set({
+			'lastItem': result['lastItem'] + 1
+		}, function () {
 			chrome.storage.local.get('itemsIdsArr', function (result2) {
 				var tempArr = result2['itemsIdsArr'];
-				tempArr[removeId] = false;
+				tempArr.push(newId);
 
 				chrome.storage.local.set({
 					'itemsIdsArr': tempArr
 				}, function () {});
 			});
-
-			var removeIdStr = removeId.toString();
-
-			chrome.storage.local.set({
-				removeIdStr: false
-			}, function () {});
-
-			$('.todo-list-item[data-id="'+removeIdStr+'"]').remove();
-
-			todoListSimplebar.recalculate();
 		});
-	}
 
-	function clearList() {
-
-	}
-	function getList() {
-
-			chrome.storage.local.get('itemsIdsArr', function (result) {
-				var tempArr = result['itemsIdsArr'];
-				tempArr[result['lastItem'] + 1] = true;
-
-				chrome.storage.local.set({
-					'itemsIdsArr': tempArr
-				}, function () {});
-			});
-
-			var newId = ((result['lastItem'] + 1).toString());
-			console.log('created '+newId);
-			chrome.storage.local.set({
-				newId: [false, ''] //данные будем хранить в формате is_checked, content
-			}, function () {});
+		console.log('created ' + newId);
+		chrome.storage.local.set({
+			[newId]: [false, ''] //данные будем хранить в формате is_checked, content
+		}, function () {});
 
 
-			var str = '<div class="todo-list-item" style="order:'+newId+';" data-id="' + newId + '">\
+		var str = '<div class="todo-list-item" style="order:' + newId + ';" data-id="' + newId + '">\
 			<label class="todo-list-item__chb-wrap">\
 				<input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox">\
 				<div class="todo-list-item__chb-pseudo js-todo-list-item__chb"></div>\
@@ -156,14 +86,125 @@
 			</div>\
 			<div class="todo-list-item__remove js-todo-list-item__remove"></div>\
 			</div>';
-			$('#todo-list').prepend(str);
+		$('#todo-list').append(str);
+		autosize($('.textarea-autosize'));
+		todoListSimplebar.recalculate();
+
+
+
+	});
+}
+
+
+
+function changeItemStatus(id, status) {
+	chrome.storage.local.get(id, function (result) {
+		var arr = result[id];
+		arr[0] = status;
+		chrome.storage.local.set({
+			[id]: arr
+		}, function () {});
+	});
+}
+
+
+function changeItemText(id, text) {
+	chrome.storage.local.get(id, function (result) {
+		var arr = result[id];
+		arr[1] = text;
+		chrome.storage.local.set({
+			[id]: arr
+		}, function () {});
+	});
+}
+
+
+function removeItem(removeId) {
+	chrome.storage.local.get('lastItem', function (result) {
+		if (removeId === result['lastItem']) {
+			chrome.storage.local.set({
+				'lastItem': result['lastItem'] - 1
+			}, function () {});
+		}
+
+		chrome.storage.local.get('itemsIdsArr', function (result2) {
+			var tempArr = result2['itemsIdsArr'];
+
+
+			const index = tempArr.indexOf(removeId);
+			if (index > -1) {
+				tempArr.splice(index, 1);
+			} else {
+				console.log('чёт странное!');
+			}
+
+			chrome.storage.local.set({
+				'itemsIdsArr': tempArr
+			}, function () {});
+		});
+
+		var removeIdStr = removeId.toString();
+
+		chrome.storage.local.set({
+			[removeIdStr]: false
+		}, function () {});
+
+		$('.todo-list-item[data-id="' + removeIdStr + '"]').remove();
+
+		todoListSimplebar.recalculate();
+	});
+}
+
+function clearList() {
+	var confirmation = confirm("Вы точно хотите удалить все ваши записи?");
+	if(confirmation){
+		$('.todo-list-item').remove();
+		reset();
+	}
+}
+
+function getList() {
+
+	console.log('getList');
+	chrome.storage.local.get('itemsIdsArr', function (result) {
+		console.log('tempArr');
+		var tempArr = result['itemsIdsArr'];
+		console.log(tempArr);
+		chrome.storage.local.get(tempArr, function (result2) {
+			console.log(result2);
+			var str = '';
+			tempArr.forEach(function (current, id) {
+				console.log('current');
+				console.log(current);
+				console.log('id');
+				console.log(id);
+
+
+				console.log('current');
+				console.log(result2[current]);
+				console.log('id');
+				console.log(result2[id]);
+				str += '<div class="todo-list-item' + (result2[current][0]===true ? ' todo-list-item--completed ' : '') + '" style="order:' + current + ';" data-id="' + current + '">\
+						<label class="todo-list-item__chb-wrap">\
+							<input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox" ' + (result2[current][0]===true ? ' checked ' : '') + '>\
+							<div class="todo-list-item__chb-pseudo js-todo-list-item__chb"></div>\
+						</label>\
+						<div class="todo-list-item__content">\
+							<textarea class="textarea-autosize">' + result2[current][1] + '</textarea>\
+						</div>\
+						<div class="todo-list-item__remove js-todo-list-item__remove"></div>\
+						</div>';
+			});
+
+			console.log(str);
+			$('#todo-list').append(str);
 			autosize($('.textarea-autosize'));
 			todoListSimplebar.recalculate();
 
-
-
 		});
-	}
+	});
+
+}
 /*
 	function exportList() {
 
@@ -172,81 +213,35 @@
 	function importList() {
 
 	}
+
 */
 
 
 
 $(document).ready(function () {
-	// $("input[name='phone']").mask(" +7 (999) 999-99-99");
-
-
-	/*
-		chrome.storage.local.set({
-			'0': [12, 13, 14, 17]
-		}, function () {
-			console.log('write end');
-		});
-
-		chrome.storage.local.set({
-			'3': "12312412"
-		}, function () {
-			console.log('write end 2');
-		});
-
-		chrome.storage.local.get('0', function (result) {
-			console.log(result);
-		});
-		chrome.storage.local.get('3', function (result) {
-			console.log(result);
-		});
-		chrome.storage.local.get(['0'], function (result) {
-			console.log(result);
-		});
-		chrome.storage.local.get(['3'], function (result) {
-			console.log(result);
-		});
-		chrome.storage.local.get(['0','3'], function (result) {
-			console.log(result);
-			console.log(result['0']);
-			console.log(result['3']);
-		});
-
-		chrome.storage.local.set({
-			'0': [12, 13, 14, 17]
-		}, function () {
-			console.log('write end');
-		});
-
-
-		chrome.storage.local.set({
-			'firstRun': true
-		}, function () {
-			console.log('write end');
-		});
-
-		chrome.storage.local.get('firstRun', function (result) {
-			console.log(result['firstRun']);
-		});
-
-		chrome.storage.local.remove('firstRun');
-
-	*/
 	initList();
 
 
 
-	todoListSimplebar=new SimpleBar($('#todo-list-wrap')[0],{
+	todoListSimplebar = new SimpleBar($('#todo-list-wrap')[0], {
 		forceVisible: true,
 		autoHide: false
 	});
 
 	autosize($('.textarea-autosize'));
 
+	function textAreaChange() {
+		changeItemText($(this).closest('.todo-list-item').attr('data-id'), $(this).val());
+	}
+	$('#todo-list').on('keyup', '.textarea-autosize', $.debounce(250, textAreaChange));
 
 	$('#todo-list').on('change', '.js-todo-list-item__chb', function () {
 		if ($(this).is(':checked')) {
+			changeItemStatus($(this).closest('.todo-list-item').attr('data-id'), true)
 			$(this).closest(".todo-list-item").addClass('todo-list-item--completed');
 		} else {
+
+			changeItemStatus($(this).closest('.todo-list-item').attr('data-id'), false)
 			$(this).closest(".todo-list-item").removeClass('todo-list-item--completed');
 		}
 	});
@@ -260,11 +255,16 @@ $(document).ready(function () {
 	$('.js-todo-add-new').click(function () {
 		addNewItem();
 	});
+	$('.js-clear-all').click(function () {
+		clearList();
+	});
+	$('#todo-list').on('click','.js-todo-list-item__remove',function () {
+		console.log($(this).closest('.todo-list-item').attr('data-id'));
+		removeItem($(this).closest('.todo-list-item').attr('data-id'));
+	});
 
 
+	getList();
 
-	class toDoList {
-
-	}
 
 });
