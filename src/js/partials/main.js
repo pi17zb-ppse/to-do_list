@@ -1,5 +1,7 @@
 var todoListSimplebar;
-
+/**
+ * Первичная нициализация списка
+ */
 function initList() {
 	chrome.storage.local.get('firstRun', function (result) {
 		//console.log('validate '+(result['firstRun'] !== true));
@@ -27,7 +29,9 @@ function initList() {
 	});
 
 }
-
+/**
+ * РЕициализация списка(Сброс)
+ */
 function reset() {
 	chrome.storage.local.set({
 		'firstRun': false
@@ -35,7 +39,9 @@ function reset() {
 		initList();
 	});
 }
-
+/**
+ * Отладочная функция для просмотра содержимого некоторых переменных в  хранилище браузера
+ */
 function status() {
 
 	chrome.storage.local.get(['firstRun', 'lastItem', 'itemsIdsArr', '0', '1','2','3','4','5'], function (result) {
@@ -51,7 +57,9 @@ function status() {
 	});
 }
 
-
+/**
+ * Создание новой записи
+ */
 function addNewItem() {
 
 	chrome.storage.local.get('lastItem', function (result) {
@@ -70,7 +78,7 @@ function addNewItem() {
 			});
 		});
 
-		console.log('created ' + newId);
+		//console.log('created ' + newId);
 		chrome.storage.local.set({
 			[newId]: [false, ''] //данные будем хранить в формате is_checked, content
 		}, function () {});
@@ -96,7 +104,12 @@ function addNewItem() {
 }
 
 
-
+/**
+ * Функция изменяет состояние элемента(выполнен пункт, или нет)
+ *
+ * @param  {string} id Идентификатор элемента в хранилище
+ * @param  {boolean} status Новое состояние
+ */
 function changeItemStatus(id, status) {
 	chrome.storage.local.get(id, function (result) {
 		var arr = result[id];
@@ -107,7 +120,10 @@ function changeItemStatus(id, status) {
 	});
 }
 
-
+/**
+ * @param  {string} id Идентификатор элемента в хранилище
+ * @param  {string} text Новый текст элемента
+ */
 function changeItemText(id, text) {
 	chrome.storage.local.get(id, function (result) {
 		var arr = result[id];
@@ -118,7 +134,9 @@ function changeItemText(id, text) {
 	});
 }
 
-
+/**
+ * @param  {string} removeId Идентификатор удаляемого элемента
+ */
 function removeItem(removeId) {
 	chrome.storage.local.get('lastItem', function (result) {
 		if (removeId === result['lastItem']) {
@@ -154,7 +172,9 @@ function removeItem(removeId) {
 		todoListSimplebar.recalculate();
 	});
 }
-
+/**
+ * Функция Очистки списка
+ */
 function clearList() {
 	var confirmation = confirm("Вы точно хотите удалить все ваши записи?");
 	if(confirmation){
@@ -162,28 +182,19 @@ function clearList() {
 		reset();
 	}
 }
-
+/**
+ * Загрузка списка
+ */
 function getList() {
-
-	console.log('getList');
 	chrome.storage.local.get('itemsIdsArr', function (result) {
-		console.log('tempArr');
+		//console.log('tempArr');
 		var tempArr = result['itemsIdsArr'];
-		console.log(tempArr);
+		//console.log(tempArr);
 		chrome.storage.local.get(tempArr, function (result2) {
-			console.log(result2);
+			//console.log(result2);
 			var str = '';
 			tempArr.forEach(function (current, id) {
-				console.log('current');
-				console.log(current);
-				console.log('id');
-				console.log(id);
 
-
-				console.log('current');
-				console.log(result2[current]);
-				console.log('id');
-				console.log(result2[id]);
 				str += '<div class="todo-list-item' + (result2[current][0]===true ? ' todo-list-item--completed ' : '') + '" style="order:' + current + ';" data-id="' + current + '">\
 						<label class="todo-list-item__chb-wrap">\
 							<input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox" ' + (result2[current][0]===true ? ' checked ' : '') + '>\
@@ -196,7 +207,7 @@ function getList() {
 						</div>';
 			});
 
-			console.log(str);
+			//console.log(str);
 			$('#todo-list').append(str);
 			autosize($('.textarea-autosize'));
 			todoListSimplebar.recalculate();
@@ -205,16 +216,6 @@ function getList() {
 	});
 
 }
-/*
-	function exportList() {
-
-	}
-
-	function importList() {
-
-	}
-
-*/
 
 
 
@@ -265,6 +266,4 @@ $(document).ready(function () {
 
 
 	getList();
-
-
 });
