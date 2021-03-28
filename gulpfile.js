@@ -14,7 +14,12 @@ var gulp = require('gulp'),
 	reload = browserSync.reload,
 	pug = require('gulp-pug');
 
+const jsdoc = require('gulp-jsdoc3');
 
+gulp.task('doc', function (cb) {
+	gulp.src(['README.md', './src/js/*/*.js'], {read: false})
+		.pipe(jsdoc(cb));
+});
 
 var path = {
 	build: {
@@ -83,7 +88,7 @@ gulp.task('js:build', function () {
 		.pipe(reload({stream: true}));
 });
 
-gulp.task('style:build', function () {		
+gulp.task('style:build', function () {
 	return gulp.src(path.src.style)
 		.pipe(plumber())
 		.pipe(sourcemaps.init())

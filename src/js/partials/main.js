@@ -260,7 +260,7 @@ $(document).ready(function () {
 		clearList();
 	});
 	$('#todo-list').on('click','.js-todo-list-item__remove',function () {
-		console.log($(this).closest('.todo-list-item').attr('data-id'));
+		//console.log($(this).closest('.todo-list-item').attr('data-id'));
 		removeItem($(this).closest('.todo-list-item').attr('data-id'));
 	});
 
