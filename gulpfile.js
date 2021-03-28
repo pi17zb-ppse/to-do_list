@@ -32,7 +32,8 @@ var path = {
 	},
 	src: {
 		html: 'src/views/*.pug',
-		js: 'src/js/main.js',
+		//js: 'src/js/main.js',
+		js: 'src/js/*.js',
 		style: 'src/style/main.scss',
 		images: 'src/images/**/*.*',
 		img: 'src/img/**/*.*',
