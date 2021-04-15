@@ -144,9 +144,6 @@ function addNewItem() {
             $('#todo-list').append(str);
             autosize($('.textarea-autosize'));
             todoListSimplebar.recalculate();
-
-
-
         });
 }
 

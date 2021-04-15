@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.1/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.1/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<book xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.1">
+    <info>
+        <title>Руководство разработчика к расширению to-do list</title>
+        <author>
+            <orgname>ПИ-17з</orgname>
+            <address>
+                <city>Донецк</city>
+                <personname>
+                    <firstname>Дмитрий</firstname>
+                    <surname>Боженко</surname>
+                </personname>
+            </address>
+            <email>dmitryboz21@yandex.com</email>
+        </author>
+        <copyright>
+            <year>2021</year>
+        </copyright>
+    </info>
+    <part>
+        <title/>
+        <chapter>
+            <title>Описание проекта</title>
+            <para>Данный проект является расширением для браузера google chrome, позволяющим вести
+                список дел </para>
+            <para>Расширение доступно по ссылке: https://github.com/pi17zb-ppse/to-do_list/</para>
+            <section>
+                <title>Особенности проекта</title>
+                <para>Юзабельный интерфейс</para>
+                <para>Эффективно используется пространство</para>
+                <para>Минималистичный интерфейс</para>
+                <para>Реализован необходимый минимум функционала для данного рода приложенй</para>
+            </section>
+        </chapter>
+        <chapter>
+            <title>Детали реализации</title>
+            <para>Особенности реализации отдельного функционала представлены ниже:</para>
+            <section>
+                <title>Добавление записи</title>
+                <para>Пользователь производит клик на кнопку "NEW", выполняется добавление новой
+                    записи</para>
+                <para>
+                    <programlisting>/**
+ * Создание новой записи
+ */
+function addNewItem() {
+
+    chrome.storage.local.get('lastItem',
+        /**
+         * Продолжаем добавление элемента. Инкрементируем счётчик элементов, после чего вызываем следующую анаон функцию
+         *
+         * @param {object} result объект, содержащий в себе полученную пару ключ/значение,
+         * где ключ это lastItem, а значение его - индекс последнего созданного элемента
+         */
+        function (result) {
+
+            var newId = ((result['lastItem'] + 1).toString());
+            chrome.storage.local.set({
+                    'lastItem': result['lastItem'] + 1
+                },
+                /**
+                 * Запрашиваем 'itemsIdsArr'
+                 */
+                function () {
+                    chrome.storage.local.get('itemsIdsArr',
+                        /**
+                         * В массив 'itemsIdsArr' добавляем новый пустой элемент
+                         * @param {object} result2 объект, содержащий 'itemsIdsArr'
+                         */
+                        function (result2) {
+                            var tempArr = result2['itemsIdsArr'];
+                            tempArr.push(newId);
+
+                            chrome.storage.local.set({
+                                'itemsIdsArr': tempArr
+                            });
+                        });
+                });
+
+            chrome.storage.local.set({
+                [newId]: [false, ''] //данные будем хранить в формате isChecked, content
+            });
+
+
+            var str = '&lt;div class="todo-list-item" style="order:' + newId + ';" data-id="' + newId + '">\
+            &lt;label class="todo-list-item__chb-wrap">\
+                &lt;input class="todo-list-item__chb js-todo-list-item__chb" type="checkbox">\
+                &lt;div class="todo-list-item__chb-pseudo js-todo-list-item__chb">&lt;/div>\
+            &lt;/label>\
+            &lt;div class="todo-list-item__content">\
+                &lt;textarea class="textarea-autosize">&lt;/textarea>\
+            &lt;/div>\
+            &lt;div class="todo-list-item__remove js-todo-list-item__remove">&lt;/div>\
+            &lt;/div>';
+            $('#todo-list').append(str);
+            autosize($('.textarea-autosize'));
+            todoListSimplebar.recalculate();
+        });
+}
+</programlisting>
+                </para>
+            </section>
+            <section>
+                <title>Удаление записи</title>
+                <para>Пользователь производит клик на кнопку "x", выполняется удаление записи</para>
+                <para>
+                    <programlisting>/**
+ * Удаление записи по id
+ *
+ * @param {string} removeId Идентификатор удаляемого элемента
+ */
+function removeItem(removeId) {
+    chrome.storage.local.get('lastItem',
+        /**
+         * Декрементируем индекс последнего элемента в случае его совпадения с индексом удаляемым, продолжаем удаление в следующей вызываемой анонимной функции
+         *
+         * @param {object} result объект, содержащий id последнего элемента
+         */
+        function (result) {
+            if (removeId === result['lastItem']) {
+                chrome.storage.local.set({
+                    'lastItem': result['lastItem'] - 1
+                });
+            }
+
+            chrome.storage.local.get('itemsIdsArr',
+                /**
+                 * Получаем массив с id всех существующих записей,  удаляем из него нужный элемент
+                 *
+                 * @param {object} result2 объект, содержащий массив itemsIdsArr
+                 */
+                function (result2) {
+                    var tempArr = result2['itemsIdsArr'];
+
+                    const index = tempArr.indexOf(removeId);
+                    if (index > -1) {
+                        tempArr.splice(index, 1);
+                    } else {
+                        console.log('чёт странное!');
+                    }
+
+                    chrome.storage.local.set({
+                        'itemsIdsArr': tempArr
+                    });
+                });
+
+            var removeIdStr = removeId.toString();
+
+            chrome.storage.local.set({
+                [removeIdStr]: false
+            });
+
+            $('.todo-list-item[data-id="' + removeIdStr + '"]').remove();
+
+            todoListSimplebar.recalculate();
+        });
+}</programlisting>
+                </para>
+            </section>
+            <section>
+                <title>Изменение текста записи записи</title>
+                <para>Пользователь редактирует в текстовом поле текст записи, выполняется функция,
+                    которая этот текст изменяет и в хранилище браузера</para>
+                <para>
+                    <programlisting>/**
+ * Функция изменяет текст элемента
+ *
+ * @param {string} id Идентификатор элемента в хранилище
+ * @param {string} text Новый текст элемента
+ */
+function changeItemText(id, text) {
+    chrome.storage.local.get(id,
+        /**
+         * изменяем массив в с записью, а именно задаём новый текст
+         *
+         * @param {object} result объект, содержащий запись
+         */
+        function (result) {
+            var arr = result[id];
+            arr[1] = text;
+            chrome.storage.local.set({
+                [id]: arr
+            });
+        });
+}</programlisting>
+                </para>
+            </section>
+        </chapter>
+    </part>
+</book>
